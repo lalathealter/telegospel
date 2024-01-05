@@ -1,0 +1,15 @@
+{
+  "RCL": {
+    "name": "Revised Common Lectionary",
+    "days": [
+      [
+        "Matt 5:5",
+        "Ps 106:1-8"
+      ],
+      [
+        "John 6:6",
+        "Ps 99"
+      ]
+    ]
+  }
+}

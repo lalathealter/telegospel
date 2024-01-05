@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/lalathealter/telegospel/keys"
 	tele "gopkg.in/telebot.v3"
@@ -12,26 +10,10 @@ import (
 type TranslationsByLanguage map[string]map[string]string
 
 var DEFAULT_TRANSLATION = "SYNOD"
-var Translations = parseTranslationsColl("./translations.json")
+var Translations = parseCollFromFile[TranslationsByLanguage]("./translations.json")
 
 var ErrNoTranslationEntries = fmt.Errorf("Ошибка: нет информации о доступных вариантах перевода")
-func parseTranslationsColl(p string) TranslationsByLanguage {
-	tran := TranslationsByLanguage{}
-	f, err := os.Open(p)
-	if err != nil {
-		panic(err)
-	}
 
-	if err := json.NewDecoder(f).Decode(&tran); err != nil {
-		panic(err)
-	}
-
-  if len(tran) == 0 {
-    panic(ErrNoTranslationEntries)
-  }
-
-	return tran
-}
 
 var ErrUnknownTranslation = fmt.Errorf("Ошибка: неизвестный вариант перевода")
 
@@ -71,11 +53,7 @@ func ChooseTranslation(c tele.Context) error {
 	return nil
 }
 
-func sendDocsForTranslation(c tele.Context) error {
-	return c.Send(getDocsForTranslation(), tele.ModeMarkdown)
-}
-
-var getDocsForTranslation = func() func() string {
+var sendDocsForTranslation = func() func(tele.Context) error {
 	msg := fmt.Sprintf(
 		"%v *код_варианта*\nДля выбора доступны следующие варианты\n*код_варианта — название*:",
 		keys.API_TRANSLATION_PATH,
@@ -88,15 +66,7 @@ var getDocsForTranslation = func() func() string {
 		}
 		msg += fmt.Sprintf("\n*%v*:%v", lang, versList)
 	}
-	return func() string {
-		return msg
-	}
+
+  return bindMessageSender(msg)
 }()
 
-func getArg(n int, c tele.Context) (string, error) {
-	args := c.Args()
-	if n >= len(args) {
-		return "", tele.ErrEmptyText
-	}
-	return args[n], nil
-}

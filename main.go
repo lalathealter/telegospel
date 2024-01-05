@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	bus "github.com/lalathealter/telegospel/business"
 	"github.com/lalathealter/telegospel/controllers"
 	"github.com/lalathealter/telegospel/keys"
 	tele "gopkg.in/telebot.v3"
@@ -32,22 +31,28 @@ func main() {
 		return
 	}
 
-	prov := bus.ChooseProvider(bus.BibleGatewayLink)
-	fmt.Println(prov.GetPassageLink("Matt 1:1", "NRSVUE"))
-
 	var (
-		menu = &tele.ReplyMarkup{ResizeKeyboard: true}
-
+		menu    = &tele.ReplyMarkup{ResizeKeyboard: true}
 		btnHelp = menu.Text("ℹ Помощь")
+		btnPrev = menu.Text("<")
+		btnCurr = menu.Text("=")
+		btnNext = menu.Text(">")
 	)
 
 	menu.Reply(
+		menu.Row(btnPrev, btnCurr, btnNext),
 		menu.Row(btnHelp),
 	)
 
+	b.Handle(keys.API_PROVIDER_PATH, controllers.ChooseProvider)
 	b.Handle(keys.API_TRANSLATION_PATH, controllers.ChooseTranslation)
+  b.Handle(keys.API_PLAN_PATH, controllers.ChooseReadingPlan)
 
+	b.Handle(&btnCurr, controllers.GetTodayPassages)
 	b.Handle(&btnHelp, controllers.GetHelp)
+  b.Handle("/start", func(ctx tele.Context) error {
+    return ctx.Send("Добро пожаловать в TeleGospel!", menu)
+	})
 
 	fmt.Println("the bot has been launched;")
 	b.Start()

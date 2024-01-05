@@ -12,10 +12,13 @@ var GetHelp = func() func(tele.Context) error {
     `Добро пожаловать в TeleGospel — приложение для проведения ежедневных библейских чтений
 Вам доступны следующие команды:
 
-%v *код_варианта* — выбор варианта перевода; для ознакомления со списком доступных переводов достаточно просто ввести эту команду`,
-		keys.API_TRANSLATION_PATH,
+%v *код_варианта* — выбор варианта перевода
+%v *код_провайдера* — выбор сайта-провайдера текста
+%v *код_плана* — выбор плана чтения (лекционария)
+
+Для ознакомления со списком доступных опций достаточно просто ввести интересующую вас команду`,
+		keys.API_TRANSLATION_PATH, keys.API_PROVIDER_PATH, keys.API_PLAN_PATH,
 	)
-	return func(c tele.Context) error {
-		return c.Send(msg, tele.ModeMarkdown)
-	}
+
+	return bindMessageSender(msg)
 }()
