@@ -35,66 +35,20 @@ func main() {
 	prov := bus.ChooseProvider(bus.BibleGatewayLink)
 	fmt.Println(prov.GetPassageLink("Matt 1:1", "NRSVUE"))
 
-	b.Handle("/translation", ChooseTranslation)
-
-	b.Handle("/hello", func(c tele.Context) error {
-		return c.Send("Hello!")
-	})
-
 	var (
 		menu = &tele.ReplyMarkup{ResizeKeyboard: true}
 
-		btnHelp     = menu.Text("ℹ Help")
-		btnSettings = menu.Text("⚙ Settings")
+		btnHelp = menu.Text("ℹ Помощь")
 	)
 
 	menu.Reply(
 		menu.Row(btnHelp),
-		menu.Row(btnSettings),
 	)
 
-	b.Handle("/start", func(c tele.Context) error {
-		return c.Send("Hello!", menu)
-	})
+	b.Handle(keys.API_TRANSLATION_PATH, controllers.ChooseTranslation)
 
-	settingsMenu := &tele.ReplyMarkup{}
-	localBtn := settingsMenu.Text("Language")
-	translationLangBtn := settingsMenu.Text("Translation")
-	translationVersionBtn := settingsMenu.Text("Version")
+	b.Handle(&btnHelp, controllers.GetHelp)
 
-	settingsMenu.Reply(
-		settingsMenu.Row(localBtn, translationLangBtn, translationVersionBtn),
-	)
-
-	localizationMenu := &tele.ReplyMarkup{}
-
-	langBtnColl := controllers.ProduceLocalizationButtons(localizationMenu, b)
-	localizationMenu.Reply(
-		localizationMenu.Split(4, langBtnColl)...,
-	)
-
-	b.Handle(&translationLangBtn, func(ctx tele.Context) error {
-		return ctx.Reply("translation", localizationMenu)
-	})
-	b.Handle(&btnSettings, func(c tele.Context) error {
-		return c.Send("settings", settingsMenu)
-	})
-
-	b.Handle(&btnHelp, func(c tele.Context) error {
-		return c.Send("Here is some help: ...")
-	})
-
-	fmt.Println("the bot has launched;")
+	fmt.Println("the bot has been launched;")
 	b.Start()
-}
-
-func ChooseTranslation(c tele.Context) error {
-	c.Send("Choose a language of translation")
-	c.Send("Choose a translation")
-	m := c.Message()
-	fmt.Println(m.Text)
-	val := m.Text
-
-	c.Set(keys.TRANSLATION, val)
-	return nil
 }
