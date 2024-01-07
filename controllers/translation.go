@@ -7,13 +7,24 @@ import (
 	tele "gopkg.in/telebot.v3"
 )
 
+type TranslationsInputObj struct {
+  Default string `json:"default_translation"`
+  Data TranslationsByLanguage `json:"translations_data"`
+}
 type TranslationsByLanguage map[string]map[string]string
 
-var DEFAULT_TRANSLATION = "SYNOD"
-var Translations = parseCollFromFile[TranslationsByLanguage]("./translations.json")
+var DEFAULT_TRANSLATION string
+var Translations TranslationsByLanguage
+
+func init() {
+  parsed := parseCollFromFile[TranslationsInputObj]("./translations.json")
+  DEFAULT_TRANSLATION = parsed.Default
+  Translations = parsed.Data
+
+  sendDocsForTranslation = initSendDocsForTranslation()
+}
 
 var ErrNoTranslationEntries = fmt.Errorf("Ошибка: нет информации о доступных вариантах перевода")
-
 
 var ErrUnknownTranslation = fmt.Errorf("Ошибка: неизвестный вариант перевода")
 
@@ -53,7 +64,9 @@ func ChooseTranslation(c tele.Context) error {
 	return nil
 }
 
-var sendDocsForTranslation = func() func(tele.Context) error {
+var sendDocsForTranslation tele.HandlerFunc
+
+func initSendDocsForTranslation() tele.HandlerFunc {
 	msg := fmt.Sprintf(
 		"%v *код_варианта*\nДля выбора доступны следующие варианты\n*код_варианта — название*:",
 		keys.API_TRANSLATION_PATH,
@@ -67,6 +80,6 @@ var sendDocsForTranslation = func() func(tele.Context) error {
 		msg += fmt.Sprintf("\n*%v*:%v", lang, versList)
 	}
 
-  return bindMessageSender(msg)
-}()
+	return bindMessageSender(msg)
 
+}

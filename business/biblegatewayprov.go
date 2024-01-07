@@ -1,18 +1,22 @@
 package business
 
 import (
+	"fmt"
 	"net/url"
+	"strings"
 )
 
 type BibleGatewaySource string
 
-func (bg BibleGatewaySource) GetPassageLink(osis string, version string) string {
-	linkObj := formURL(string(bg), "/passage/")
-	linkObj = attachQuery(linkObj, "search", osis)
-	attachQuery(linkObj, "version", version)
-	// link := linkObj.String()
+func (bg BibleGatewaySource) GetPassageLink(osisColl []string, version string) string {
+	osisQuery := strings.Join(osisColl, ", ")
 
-	return linkObj.String()
+	linkObj := formURL(string(bg), "/passage/")
+	linkObj = attachQuery(linkObj, "search", osisQuery)
+	linkObj = attachQuery(linkObj, "version", version)
+
+	linkMsg := fmt.Sprintf("\n[%v](%v)", osisQuery, linkObj.String())
+	return linkMsg
 }
 
 func (bg BibleGatewaySource) String() string {

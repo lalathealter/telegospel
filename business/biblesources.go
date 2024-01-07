@@ -1,7 +1,7 @@
 package business
 
 type BSI interface {
-	GetPassageLink(string, string) string // osis, translation code
+	GetPassageLink([]string, string) string // osis slice, translation code
 	String() string
 }
 

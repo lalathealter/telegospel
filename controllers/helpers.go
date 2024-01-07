@@ -29,7 +29,7 @@ func parseCollFromFile[T any](p string) T {
 	return *coll
 }
 
-func bindMessageSender(msg string) func(tele.Context) error {
+func bindMessageSender(msg string) tele.HandlerFunc {
 	return func(ctx tele.Context) error {
 		return ctx.Send(msg, tele.ModeMarkdown)
 	}

@@ -47,7 +47,9 @@ func main() {
 	b.Handle(keys.API_PROVIDER_PATH, controllers.ChooseProvider)
 	b.Handle(keys.API_TRANSLATION_PATH, controllers.ChooseTranslation)
   b.Handle(keys.API_PLAN_PATH, controllers.ChooseReadingPlan)
+  b.Handle(keys.API_READING_DAY_PATH, controllers.ChooseReadingDay)
 
+  // b.Handle(&btnNext, controllers.)
 	b.Handle(&btnCurr, controllers.GetTodayPassages)
 	b.Handle(&btnHelp, controllers.GetHelp)
   b.Handle("/start", func(ctx tele.Context) error {

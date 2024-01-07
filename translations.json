@@ -1,9 +1,12 @@
 {
-  "русский": {
-    "RUSV": "Синодальный"
-  },
-  "english": {
-    "NKJV": "New King James' Version",
-    "KJV": "King James' Version"
+  "default_translation": "RUSV",
+  "translations_data": {
+    "русский": {
+      "RUSV": "Синодальный"
+    },
+    "english": {
+      "NKJV": "New King James' Version",
+      "KJV": "King James' Version"
+    }
   }
 }

@@ -31,7 +31,7 @@ func setProvider(provName string, c tele.Context) error {
   return nil
 }
 
-var sendDocsForProvider = func() func(tele.Context) error {
+var sendDocsForProvider = func() tele.HandlerFunc {
 	msg := fmt.Sprintf(
 		"%v *код_провайдера*\nДля выбора доступны следующие провайдеры:\n*код_провайдера — название_провайдера*",
 		keys.API_PROVIDER_PATH,
