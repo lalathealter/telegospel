@@ -11,7 +11,6 @@ import (
 
 func getReadingDay(c tele.Context) int {
   day2 := c.Get(keys.READING_DAY)
-  fmt.Println(day2)
   day, ok := day2.(int)
   if !ok {
     setReadingDay(0, c)
@@ -40,7 +39,7 @@ func setReadingDay(dayIndex int, c tele.Context) error {
 
   c.Set(keys.READING_DAY, dayIndex)
   msg := fmt.Sprintf("Выбран день %v", dayIndex+1)
-  fmt.Println(dayIndex)
+
   return c.Send(msg)
 }
 

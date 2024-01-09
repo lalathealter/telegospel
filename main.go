@@ -44,6 +44,7 @@ func main() {
 		menu.Row(btnHelp),
 	)
 
+	b.Use(controllers.ManageUserContext)
 	b.Handle(keys.API_PROVIDER_PATH, controllers.ChooseProvider)
 	b.Handle(keys.API_TRANSLATION_PATH, controllers.ChooseTranslation)
   b.Handle(keys.API_PLAN_PATH, controllers.ChooseReadingPlan)

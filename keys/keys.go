@@ -11,3 +11,7 @@ const (
 	READING_DAY          = "reading_day"
 	API_READING_DAY_PATH = "/day"
 )
+
+var SETTINGS_KEYS = [...]string{
+	TRANSLATION, PLAN, READING_DAY, PROVIDER,
+}
