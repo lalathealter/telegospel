@@ -10,13 +10,30 @@ import (
 
 
 func getReadingDay(c tele.Context) int {
-  day2 := c.Get(keys.READING_DAY)
-  day, ok := day2.(int)
-  if !ok {
-    setReadingDay(0, c)
-    day = 0
+  dayData := c.Get(keys.READING_DAY)
+  
+  var day int
+  switch dayData.(type) {
+  case float64:
+    day = int(dayData.(float64))
+  case string:
+    dayc, err := strconv.Atoi(dayData.(string))
+    day = dayc
+    if err != nil {
+      setReadingDay(0, c)
+      return 0
+    }
+  default:
+    dayc, ok := dayData.(int)
+    if !ok {
+      setReadingDay(0, c)
+      return 0
+    }
+    day = dayc
   }
-  return day
+
+  ans := clampDay(day, c)
+  return ans
 }
 
 func ChooseReadingDay(c tele.Context) error {
@@ -30,12 +47,11 @@ func ChooseReadingDay(c tele.Context) error {
     return sendDocsForReadingDay(c)
   }
 
-  return setReadingDay(i, c)
+  return setReadingDay(i-1, c)
 }
 
 func setReadingDay(dayIndex int, c tele.Context) error {
-  planLen := getCurrPlanSchedule(c).getPlanLength()
-  dayIndex = clampDayIndex(dayIndex, planLen)
+  dayIndex = clampDay(dayIndex, c)
 
   c.Set(keys.READING_DAY, dayIndex)
   msg := fmt.Sprintf("Выбран день %v", dayIndex+1)
@@ -43,18 +59,17 @@ func setReadingDay(dayIndex int, c tele.Context) error {
   return c.Send(msg)
 }
 
-func clampDayIndex(day int, planLength int) int {
-  if day < 0 {
-    day = -day
-  } else if day == 0 {
-    return day
+func clampDay(v int, c tele.Context) int {
+  planLen := getCurrPlanSchedule(c).getPlanLength()
+  if v < 0 {
+    v = -v
   }
 
-  if day > planLength {
-    day = planLength
+  if v >= planLen {
+    v = planLen - 1
   }
 
-  return day - 1
+  return v
 }
 
 var sendDocsForReadingDay = func()tele.HandlerFunc{

@@ -8,6 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/lalathealter/telegospel/controllers"
+	"github.com/lalathealter/telegospel/db"
 	"github.com/lalathealter/telegospel/keys"
 	tele "gopkg.in/telebot.v3"
 )
@@ -17,6 +18,10 @@ func init() {
 		log.Fatal(err)
 		return
 	}
+
+  if err := db.Get().Ping(); err != nil {
+    log.Fatal(err)
+  }
 }
 
 func main() {

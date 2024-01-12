@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strings"
+
 	tele "gopkg.in/telebot.v3"
 
 	"encoding/json"
@@ -12,7 +14,8 @@ func getArg(n int, c tele.Context) (string, error) {
 	if n >= len(args) {
 		return "", tele.ErrEmptyText
 	}
-	return args[n], nil
+	uppedAns := strings.ToUpper(args[n])
+	return uppedAns, nil
 }
 
 func parseCollFromFile[T any](p string) T {
