@@ -28,7 +28,8 @@ func GetCurrProvider(c tele.Context) bus.BSI {
 func setProvider(provName string, c tele.Context) error {
 	prov := bus.GetProviderInterface(provName)
 	c.Set(keys.PROVIDER, prov)
-  return nil
+  msg := fmt.Sprintf("Выбран провайдер %v", prov)
+  return c.Send(msg)
 }
 
 var sendDocsForProvider = func() tele.HandlerFunc {

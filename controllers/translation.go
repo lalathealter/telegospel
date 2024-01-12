@@ -61,7 +61,8 @@ func ChooseTranslation(c tele.Context) error {
 		return sendDocsForTranslation(c)
 	}
 
-	return nil
+  msg := fmt.Sprintf("Выбран вариант %v", version)
+	return c.Send(msg)
 }
 
 var sendDocsForTranslation tele.HandlerFunc

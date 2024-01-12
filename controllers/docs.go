@@ -15,9 +15,10 @@ var GetHelp = func() func(tele.Context) error {
 %v *код_варианта* — выбор варианта перевода
 %v *код_провайдера* — выбор сайта-провайдера текста
 %v *код_плана* — выбор плана чтения (лекционария)
+%v *номер_дня* — выбор дня внутри плана чтения
 
 Для ознакомления со списком доступных опций достаточно просто ввести интересующую вас команду`,
-		keys.API_TRANSLATION_PATH, keys.API_PROVIDER_PATH, keys.API_PLAN_PATH,
+		keys.API_TRANSLATION_PATH, keys.API_PROVIDER_PATH, keys.API_PLAN_PATH, keys.API_READING_DAY_PATH,
 	)
 
 	return bindMessageSender(msg)

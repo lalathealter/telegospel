@@ -92,10 +92,6 @@ func (rps ReadingPlans) getContentsOf(plan string) ReadingPlanContent {
   return chPlan.Days
 }
 
-const DEFAULT_READING_PLAN = "RCL"
-func (rps ReadingPlans) getDefaultContents() ReadingPlanContent {
-  return rps.getContentsOf(DEFAULT_READING_PLAN)
-}
 
 type ReadingPlan struct {
 	Name string             `json:"name"`
@@ -120,6 +116,7 @@ func ChooseReadingPlan(c tele.Context) error {
 	if err != nil {
 		return sendDocsForReadingPlan(c)
 	}
+  
 
   
 	return setReadingDay(0, c)
@@ -152,12 +149,13 @@ func getPassagesFor(dayIndex int, c tele.Context) []string {
 }
 
 func getCurrPlanSchedule(c tele.Context) ReadingPlanContent {
-	v, ok := c.Get(keys.PLAN).(ReadingPlanContent)
+	planCode, ok := c.Get(keys.PLAN).(string)
 	if !ok {
     setDefaultPlan(c)
-		v = getCurrPlanSchedule(c)
+		return getCurrPlanSchedule(c)
 	}
-	return v
+
+	return plansColl.getContentsOf(planCode)
 }
 
 
@@ -170,12 +168,15 @@ func setPlan(planCode string, c tele.Context) error {
     return ErrUnknownReadingPlan
   }
 
-  c.Set(keys.PLAN, plansColl.getContentsOf(planCode))
-  return nil
+  c.Set(keys.PLAN, planCode)
+  msg := fmt.Sprintf("Выбран план %v", planCode)
+  return c.Send(msg)
 }
 
+
+const DEFAULT_READING_PLAN = "RCL"
 func setDefaultPlan(c tele.Context) {
-  c.Set(keys.PLAN, plansColl.getDefaultContents())
+  c.Set(keys.PLAN, DEFAULT_READING_PLAN)
 }
 
 
