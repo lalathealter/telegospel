@@ -54,8 +54,11 @@ func main() {
 	b.Handle(keys.API_TRANSLATION_PATH, controllers.ChooseTranslation)
   b.Handle(keys.API_PLAN_PATH, controllers.ChooseReadingPlan)
   b.Handle(keys.API_READING_DAY_PATH, controllers.ChooseReadingDay)
+  b.Handle(keys.API_READING_DAY_MOVE_BACKWARD_PATH, controllers.MoveReadingDayBackwardBy)
+  b.Handle(keys.API_READING_DAY_MOVE_FORWARD_PATH, controllers.MoveReadingDayForwardBy)
 
-  // b.Handle(&btnNext, controllers.)
+  b.Handle(&btnPrev, controllers.MovePrevReadingDay)
+  b.Handle(&btnNext, controllers.MoveNextReadingDay)
 	b.Handle(&btnCurr, controllers.GetTodayPassages)
 	b.Handle(&btnHelp, controllers.GetHelp)
   b.Handle("/start", func(ctx tele.Context) error {
