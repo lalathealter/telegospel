@@ -98,7 +98,7 @@ type ReadingPlan struct {
 	Days ReadingPlanContent `json:"days"`
 }
 
-type ReadingPlanContent [][]string
+type ReadingPlanContent [][][]string
 func (rpc ReadingPlanContent) getPlanLength() int {
   return len(rpc)
 }
@@ -117,8 +117,6 @@ func ChooseReadingPlan(c tele.Context) error {
 		return sendDocsForReadingPlan(c)
 	}
   
-
-  
 	return setReadingDay(0, c)
 }
 
@@ -128,18 +126,23 @@ var ErrCouldNotGetPassages = fmt.Errorf("Ошибка: провалилась п
 func GetTodayPassages(c tele.Context) error {
   day := getReadingDay(c)
   prov := GetCurrProvider(c)
-	passes := getPassagesFor(day, c)
-	if passes == nil {
+	sections := getPassagesFor(day, c)
+	if sections == nil {
 		return ErrCouldNotGetPassages
 	}
 
+  tran := GetTranslation(c)
   msg := fmt.Sprintf("День %v", day+1)
-  msg += prov.GetPassageLink(passes, GetTranslation(c))
+  msg += prov.GetPassageLink(sections[0], tran)
+  if len(sections) > 1 {
+    msg += fmt.Sprintf("\nДополнение:")
+    msg += prov.GetPassageLink(sections[1], tran)
+  }
 
 	return bindMessageSender(msg)(c)
 }
 
-func getPassagesFor(dayIndex int, c tele.Context) []string {
+func getPassagesFor(dayIndex int, c tele.Context) [][]string {
 	planDays := getCurrPlanSchedule(c)
 	if dayIndex >= planDays.getPlanLength() {
 		return nil
