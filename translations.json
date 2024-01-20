@@ -2,11 +2,21 @@
   "default_translation": "RUSV",
   "translations_data": {
     "русский": {
-      "RUSV": "Синодальный"
+      "RUSV": "Русский Синодальный Перевод",
+      "NRT": "Новый Русский Перевод"
     },
     "english": {
+      "ESV": "English Standard Version",
+      "NRSV": "New Revised Standard Version Updated Edition",
+      "NET": "New English Translation",
+      "NIV": "New International Version",
+      "NASB": "New American Standard Bible",
       "NKJV": "New King James' Version",
+      "DRA": "Douay-Rheims 1899 American Edition",
       "KJV": "King James' Version"
+    },
+    "latina": {
+      "VULGATE": "Biblia Sacra Vulgata"
     }
   }
 }

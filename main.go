@@ -39,9 +39,9 @@ func main() {
 	var (
 		menu    = &tele.ReplyMarkup{ResizeKeyboard: true}
 		btnHelp = menu.Text("ℹ Помощь")
-		btnPrev = menu.Text("<")
-		btnCurr = menu.Text("=")
-		btnNext = menu.Text(">")
+		btnPrev = menu.Text("⬅️")
+		btnCurr = menu.Text("📖")
+		btnNext = menu.Text("➡️")
 	)
 
 	menu.Reply(
